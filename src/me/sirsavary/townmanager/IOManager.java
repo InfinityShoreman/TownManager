@@ -26,7 +26,7 @@ import org.bukkit.entity.Player;
 
 public class IOManager {
 	Main plugin;
-	String dbType;
+	static String dbType;
 	//Used for universal and standardized I/O
 	public static MFS mfs = null;
 	//The database, used with MFS
@@ -38,16 +38,13 @@ public class IOManager {
 	public static Table chunkTB;
 	public static Table countryTB;
 
-	private ArrayList<Plot> livePlotList = new ArrayList<Plot>();
-	private HashMap<String, Town> liveTownList = new HashMap<String, Town>();
-	private ArrayList<Country> liveCountryList = new ArrayList<Country>();
-	private ArrayList<TownChunk> liveChunkList = new ArrayList<TownChunk>();
-	public IOManager(Main Instance, String DBType) {
-		plugin = Instance;
+	private static ArrayList<Plot> livePlotList = new ArrayList<Plot>();
+	private static HashMap<String, Town> liveTownList = new HashMap<String, Town>();
+	private static ArrayList<Country> liveCountryList = new ArrayList<Country>();
+	private static ArrayList<TownChunk> liveChunkList = new ArrayList<TownChunk>();
+
+	public static void Initialize(String DBType){
 		dbType = DBType.toLowerCase();
-		Initialize();
-	}
-	private void Initialize(){
 		//Prepare MFS backend
 		if (PrepareMFS()) {
 			//Initialize and verify database connection
@@ -60,7 +57,7 @@ public class IOManager {
 		}
 
 	}
-	private boolean PrepareMFS() {
+	private static boolean PrepareMFS() {
 		if (MFSConnector.prepareMFS(Main.pm))
 			//MFS prepared and can be connected now
 			return true;
@@ -70,7 +67,7 @@ public class IOManager {
 			return false;
 		}
 	}
-	private boolean VerifyDatabase() {
+	private static boolean VerifyDatabase() {
 		if (!(dbType.equalsIgnoreCase("flatfile") || dbType.equalsIgnoreCase("mysql") || dbType.equalsIgnoreCase("yml") || dbType.equalsIgnoreCase("sqlite") || dbType.equalsIgnoreCase("h2") || dbType.equalsIgnoreCase("postgre"))) {
 			Log.severe("Invalid database type! Valid types:");
 			Log.severe("flatfile, mysql, sqlite, h2, postgre, yml");
@@ -86,7 +83,7 @@ public class IOManager {
 			return true;
 		}
 	}
-	private void CheckDatabase() {
+	private static void CheckDatabase() {
 		DB = mfs.getDB(Main.yamlConfig.getString("Database.MySQL.DBName"));
 		if (DB == null) {
 			DB = mfs.createNewDB("Database.MySQL.DBName");
@@ -118,7 +115,7 @@ public class IOManager {
 
 		playerTB.addField(new Field("Map",DataType.Integer));
 	}
-	private void PullDataFromDatabase() {
+	private static void PullDataFromDatabase() {
 		Result r;
 		int i;
 		//Pull plots
@@ -205,7 +202,7 @@ public class IOManager {
 			Log.info(p.getID() + "; " + p.getMinPoint() + "," + p.getMaxPoint());
 		}
 	}
-	public Integer getPlayerMap(String player) {
+	public static Integer getPlayerMap(String player) {
 		Result res = playerTB.filterRecord("Name", player);
 		if (res.totalRecord() <= 0) return null;
 		try {
@@ -214,7 +211,7 @@ public class IOManager {
 			return null;
 		}
 	}
-	public void setPlayerMap(String player, Integer mapNumber) {
+	public static void setPlayerMap(String player, Integer mapNumber) {
 		Result res = playerTB.filterRecord("Name", player);
 		if (res.totalRecord() == 1) {
 			playerTB.deleteRecords(res);
@@ -226,14 +223,14 @@ public class IOManager {
 		}
 
 	}
-	public Plot getPlot(String plotName) {
+	public static Plot getPlot(String plotName) {
 		for (Plot p : livePlotList) {
 			if (p.getID().equalsIgnoreCase(plotName))
 				return p;
 		}
 		return null;
 	}
-	public void SavePlot(Plot plot) {
+	public static void SavePlot(Plot plot) {
 		int x1 = (int) Math.floor(plot.getMinPoint().getX());
 		int y1 = (int) Math.floor(plot.getMinPoint().getY());
 		int z1 = (int) Math.floor(plot.getMinPoint().getZ());
@@ -250,7 +247,7 @@ public class IOManager {
 		plotTB.addRecord(plot.getID(), p1, p2, plot.getPlotType().getName(), town.getID(), town.getMayor(), plot.getMembers());
 		livePlotList.add(plot);
 	}
-	public Town getTown(String townName) {
+	public static Town getTown(String townName) {
 		return liveTownList.get(townName);
 	}
 	public void SaveTown(Town town) {
@@ -277,7 +274,7 @@ public class IOManager {
 		town.setSize(chunkTB.filterRecord("Town", name).totalRecord());
 		liveTownList.put(town.getID(), town);
 	}
-	public void UpdateTown(Town town) {
+	public static void UpdateTown(Town town) {
 		String name = town.getID(); //The name of the town
 		String mayor = town.getMayor(); //The name of the town's mayor
 		String townHallPlot = town.getTownHallPlot().getID(); //The name of the town's Town Hall plot
@@ -302,42 +299,42 @@ public class IOManager {
 		town.setSize(chunkTB.filterRecord("Town", name).totalRecord());
 		liveTownList.put(town.getID(), town);
 	}
-	public Country getCountry(String  countryName) {
+	public static Country getCountry(String  countryName) {
 		for (Country t : liveCountryList) {
 			if (t.getID().equalsIgnoreCase(countryName))
 				return t;
 		}
 		return null;
 	}
-	public void SaveCountry(Country country) {
+	public static void SaveCountry(Country country) {
 		String ID = country.getID();
 		String leader = country.getLeader().getName();
 
 		countryTB.addRecord(ID, leader);
 		liveCountryList.add(country);
 	}
-	public Country getCountryAtChunk(Chunk chunk) {
+	public static Country getCountryAtChunk(Chunk chunk) {
 		for (TownChunk tc : liveChunkList) {
 			if ((tc.getX() == chunk.getX()) && (tc.getZ() == chunk.getZ()))
 				return getCountry(tc.getCountry());
 		}
 		return null;
 	}
-	public Town getTownAtChunk(Chunk chunk) {
+	public static Town getTownAtChunk(Chunk chunk) {
 		for (TownChunk tc : liveChunkList) {
 			if ((tc.getX() == chunk.getX()) && (tc.getZ() == chunk.getZ()))
 				return getTown(tc.getTown());
 		}
 		return null;
 	}
-	public TownChunk getTownChunkAtChunk(Chunk chunk) {
+	public static TownChunk getTownChunkAtChunk(Chunk chunk) {
 		for (TownChunk tc : liveChunkList) {
 			if ((tc.getX() == chunk.getX()) && (tc.getZ() == chunk.getZ()))
 				return tc;
 		}
 		return null;
 	}
-	public ArrayList<Plot> getPlotsAtChunk(Chunk chunk) {
+	public static ArrayList<Plot> getPlotsAtChunk(Chunk chunk) {
 		for (TownChunk tc : liveChunkList) {
 			if ((tc.getX() == chunk.getX()) && (tc.getZ() == chunk.getZ()))
 				return tc.getPlots();
@@ -350,7 +347,7 @@ public class IOManager {
 	 * @param chunk
 	 * @return true if chunk is occupied, false if chunk is not
 	 */
-	public boolean isChunkOccupied(Chunk chunk) {
+	public static boolean isChunkOccupied(Chunk chunk) {
 		for (TownChunk tc : liveChunkList) {
 			if ((tc.getX() == chunk.getX()) && (tc.getZ() == chunk.getZ())) {
 				if ((tc.getCountry() != null) || (tc.getTown() != null) || (tc.getPlots().size() > 0)) return true;
@@ -364,7 +361,7 @@ public class IOManager {
 	 * @param chunk
 	 * @return true if chunk is occupied by country, false if chunk is not
 	 */
-	public boolean isChunkOccupiedByCountry(Chunk chunk) {
+	public static boolean isChunkOccupiedByCountry(Chunk chunk) {
 		for (TownChunk tc : liveChunkList) {
 			if ((tc.getX() == chunk.getX()) && (tc.getZ() == chunk.getZ())) {
 				if (tc.getCountry() != null) return true;
@@ -378,7 +375,7 @@ public class IOManager {
 	 * @param chunk
 	 * @return true if chunk is occupied by town, false if chunk is not
 	 */
-	public boolean isChunkOccupiedByTown(Chunk chunk) {
+	public static boolean isChunkOccupiedByTown(Chunk chunk) {
 		for (TownChunk tc : liveChunkList) {
 			if ((tc.getX() == chunk.getX()) && (tc.getZ() == chunk.getZ())) {
 				if (tc.getTown() != null) return true;
@@ -392,7 +389,7 @@ public class IOManager {
 	 * @param chunk
 	 * @return true if chunk is occupied by plots, false if chunk is not
 	 */
-	public boolean isChunkOccupiedByPlots(Chunk chunk) {
+	public static boolean isChunkOccupiedByPlots(Chunk chunk) {
 		for (TownChunk tc : liveChunkList) {
 			if ((tc.getX() == chunk.getX()) && (tc.getZ() == chunk.getZ())) {
 				if (tc.getPlots().size() > 0) return true;
@@ -400,22 +397,22 @@ public class IOManager {
 		}
 		return false;
 	}
-	public ArrayList<Plot> getPlots() {
+	public static ArrayList<Plot> getPlots() {
 		if (livePlotList.size() <= 0) return null;
 		return livePlotList;
 	}
-	public Collection<Town> getTowns() {
+	public static Collection<Town> getTowns() {
 		return liveTownList.values();
 	}
-	public ArrayList<Country> getCountries() {
+	public static ArrayList<Country> getCountries() {
 		if (liveCountryList.size() <= 0) return null;
 		return liveCountryList;
 	}
-	public ArrayList<TownChunk> getChunks() {
+	public static ArrayList<TownChunk> getChunks() {
 		if (liveChunkList.size() <= 0) return null;
 		return liveChunkList;
 	}
-	public void TrackChunk(TownChunk chunk) {
+	public static void TrackChunk(TownChunk chunk) {
 		String plots = "";
 		//For loop to see if an instance of the chunk is already being tracked, will update it if it exists
 		for (TownChunk tc : liveChunkList) {
@@ -474,7 +471,7 @@ public class IOManager {
 		}
 
 	}
-	public void TrackPlotChunks(Plot plot) {
+	public static void TrackPlotChunks(Plot plot) {
 		ArrayList<Chunk> cList = new ArrayList<Chunk>();
 		for (Block b : plot.getSurfaceBlocks()) {
 			if (!cList.contains(b.getChunk())) {
@@ -487,12 +484,12 @@ public class IOManager {
 			TrackChunk(new TownChunk(c, pList, getTown(plot.getTownID()).getCountry(), plot.getTownID()));
 		}
 	}
-	public Town getPlayerTown(Player player) {
+	public static Town getPlayerTown(Player player) {
 		Result r = playerTB.filterRecord("Name", player.getName());
 		if (r.totalRecord() <= 0) return null;
 		else return getTown(r.getRecord(0).getData(new Field("Town")));
 	}
-	public void RemoveTown(Town t) {
+	public static void RemoveTown(Town t) {
 		playerTB.deleteRecords(playerTB.filterRecord("Town", t.getID()));
 		chunkTB.deleteRecords(chunkTB.filterRecord("Town", t.getID()));
 		townTB.deleteRecords(townTB.filterRecord("ID", t.getID()));
@@ -504,7 +501,7 @@ public class IOManager {
 
 		PullDataFromDatabase();
 	}
-	public void AddCitizen(String player, Town town) {
+	public static void AddCitizen(String player, Town town) {
 		int mapNumber;
 		try {
 			mapNumber = getPlayerMap(player);
@@ -526,7 +523,7 @@ public class IOManager {
 		list.add(player);
 		town.setCitizens(list);
 	}
-	public void RemoveCitizen(String player, Town town) {
+	public static void RemoveCitizen(String player, Town town) {
 		playerTB.deleteRecords(playerTB.filterRecord("Name", player));
 
 		Result res = plotTB.filterRecord("Town", town.getID()); //Fetch all plots belonging to town
@@ -566,7 +563,7 @@ public class IOManager {
 		list.remove(player);
 		town.setCitizens(list);
 	}
-	public void UnTrackChunk(TownChunk chunk) {
+	public static void UnTrackChunk(TownChunk chunk) {
 		TownChunk townChunkToRemove = null;
 		for (TownChunk tc : liveChunkList) {
 			if ((tc.getX() == chunk.getX()) && (tc.getZ() == chunk.getZ())) {
@@ -583,7 +580,7 @@ public class IOManager {
 			t.setSize(t.getSize() - 1);
 		}
 	}
-	public boolean isPlayerMemberOfPlot(Plot plot, Player p) {
+	public static boolean isPlayerMemberOfPlot(Plot plot, Player p) {
 		String[] memberArray = plot.getMembers().split(",");
 		for (String s : memberArray) {
 			if (s.equalsIgnoreCase(p.getName())) return true;
