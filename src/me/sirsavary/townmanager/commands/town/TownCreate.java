@@ -1,6 +1,7 @@
 package me.sirsavary.townmanager.commands.town;
 
 import me.sirsavary.townmanager.Chatter;
+import me.sirsavary.townmanager.Debug;
 import me.sirsavary.townmanager.IOManager;
 import me.sirsavary.townmanager.Main;
 import me.sirsavary.townmanager.commands.AbstractCommand;
@@ -26,6 +27,7 @@ public class TownCreate extends AbstractCommand
 		Player player = (Player) sender;
 		player.sendMessage("");
 		player.sendMessage(Chatter.Message("Please head to your town hall"));
+		Debug.info(player.getName() + " is creating a new town");
 		if (Main.questioner.ask(player, Chatter.Message("When you are there type anything to continue")) != null) {
 
 			player.sendMessage("");
@@ -58,8 +60,10 @@ public class TownCreate extends AbstractCommand
 						String townName = Main.questioner.ask(player, "Please choose a name for your town:");
 						if (townName.equalsIgnoreCase("timed out")) {
 							player.sendMessage(Chatter.TagMessage("You took too long! Operation cancelled!"));
+							Debug.warning(player.getName() + " took to long to choose town name, operation cancelled");
 						}
 						else {
+							Debug.info("");
 							Plot region = new Plot("townhall", sel.getMinPoint(), sel.getMaxPoint(), townName, PlotType.GOVERNMENT, player.getName());
 
 							Town newTown = new Town(townName, region, player.getName());
@@ -71,11 +75,6 @@ public class TownCreate extends AbstractCommand
 							player.sendMessage("");
 							player.sendMessage(Chatter.Message("Congratulations!"));
 							player.sendMessage(Chatter.Message("You survived the town creation process!"));
-
-							/*player.sendMessage("");
-							if (Main.questioner.ask((Player)player, "Edit flags and settings now?", "yes", "no").equals("yes")) {
-								//new ConfigureTown(player, true, null);
-							}*/
 						}
 					}
 				}
@@ -91,10 +90,12 @@ public class TownCreate extends AbstractCommand
 			if (t.getMayor().equalsIgnoreCase(sender.getName())) {
 				sender.sendMessage(Chatter.Message("You are currently the mayor of " + t.getColor() + t.getID()));
 				sender.sendMessage(Chatter.Message("You must first delete " + t.getColor() + t.getID() + Main.messageColor + " before making a new town"));
+				Debug.warning(sender.getName() + " is trying to create a new town but is the mayor of " + t.getID());
 			}
 			else {
 				sender.sendMessage(Chatter.Message("You are currently a resident of " + t.getColor() + t.getID()));
 				sender.sendMessage(Chatter.Message("If you leave you will lose your home protection in the process"));
+				Debug.warning(sender.getName() + " is trying to create a new town but is already part of a town");
 				if (Main.questioner.ask((Player)sender, "Are you sure you want to leave it to create your own town?", "yes", "no").equals("yes")) {
 					CreateTown();
 				}
