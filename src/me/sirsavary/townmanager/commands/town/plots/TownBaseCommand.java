@@ -1,6 +1,7 @@
 package me.sirsavary.townmanager.commands.town.plots;
 
 import me.sirsavary.townmanager.Chatter;
+import me.sirsavary.townmanager.IOManager;
 import me.sirsavary.townmanager.Main;
 import me.sirsavary.townmanager.commands.AbstractCommand;
 import me.sirsavary.townmanager.objects.Plot;
@@ -25,7 +26,7 @@ public class TownBaseCommand extends AbstractCommand {
 	@SuppressWarnings("unused")
 	@Override
 	public void run() {
-		Town t = Main.fileManager.getPlayerTown(p);
+		Town t = IOManager.getPlayerTown(p);
 		if (t == null) {
 			p.sendMessage(Chatter.TagMessage("You are not part of a town!"));
 		}

@@ -46,7 +46,7 @@ public class TownMapRenderer extends MapRenderer {
 		int playerX = playerChunk.getX();
 		int playerZ = playerChunk.getZ();
 
-		ArrayList<TownChunk> chunks =  Main.fileManager.getChunks();
+		ArrayList<TownChunk> chunks =  IOManager.getChunks();
 		if (chunks != null) {
 			for (TownChunk tc : chunks)
 				if ((tc.getX() <= (playerX + 3)) && (tc.getX() >= (playerX - 3)) && (tc.getZ() <= (playerZ + 2)) && (tc.getZ() >= (playerZ - 2))) {
@@ -80,8 +80,8 @@ public class TownMapRenderer extends MapRenderer {
 					}
 				}
 				else {
-					Town playerTown = Main.fileManager.getPlayerTown(p);
-					t = Main.fileManager.getTown(tc.getTown());
+					Town playerTown = IOManager.getPlayerTown(p);
+					t = IOManager.getTown(tc.getTown());
 					if ((playerTown != null) && (t == playerTown)) {
 						color = MapPalette.LIGHT_GREEN;//TownChunk belongs to players town
 					}
@@ -124,10 +124,10 @@ public class TownMapRenderer extends MapRenderer {
 
 		int mapNumber;
 		try {
-			mapNumber = Main.fileManager.getPlayerMap(player.getName());
+			mapNumber = IOManager.getPlayerMap(player.getName());
 		} catch (NullPointerException e) {
 			mapNumber = Main.server.createMap(player.getWorld()).getId();
-			Main.fileManager.setPlayerMap(player.getName(), mapNumber);
+			IOManager.setPlayerMap(player.getName(), mapNumber);
 		}
 
 		is.setDurability((short) mapNumber);

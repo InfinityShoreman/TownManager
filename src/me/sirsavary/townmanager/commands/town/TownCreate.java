@@ -1,6 +1,7 @@
 package me.sirsavary.townmanager.commands.town;
 
 import me.sirsavary.townmanager.Chatter;
+import me.sirsavary.townmanager.IOManager;
 import me.sirsavary.townmanager.Main;
 import me.sirsavary.townmanager.commands.AbstractCommand;
 import me.sirsavary.townmanager.objects.Plot;
@@ -15,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class TownCreate extends AbstractCommand
 {
-	Town t = Main.fileManager.getPlayerTown((Player) sender);
+	Town t = IOManager.getPlayerTown((Player) sender);
 
 	public TownCreate(CommandSender sender, boolean async, Main plugin) throws Exception {
 		super(sender, async, plugin);
@@ -63,9 +64,9 @@ public class TownCreate extends AbstractCommand
 
 							Town newTown = new Town(townName, region, player.getName());
 							Main.fileManager.SaveTown(newTown);
-							Main.fileManager.AddCitizen(player.getName(), newTown);
-							Main.fileManager.SavePlot(region);
-							Main.fileManager.TrackPlotChunks(region);
+							IOManager.AddCitizen(player.getName(), newTown);
+							IOManager.SavePlot(region);
+							IOManager.TrackPlotChunks(region);
 
 							player.sendMessage("");
 							player.sendMessage(Chatter.Message("Congratulations!"));

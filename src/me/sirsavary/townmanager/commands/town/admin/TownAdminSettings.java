@@ -1,6 +1,7 @@
 package me.sirsavary.townmanager.commands.town.admin;
 
 import me.sirsavary.townmanager.Chatter;
+import me.sirsavary.townmanager.IOManager;
 import me.sirsavary.townmanager.Main;
 import me.sirsavary.townmanager.commands.AbstractCommand;
 import me.sirsavary.townmanager.objects.TaxType;
@@ -20,7 +21,7 @@ public class TownAdminSettings extends AbstractCommand {
 			throws Exception {
 		super(sender, async, plugin);
 		p = (Player) sender;
-		t = Main.fileManager.getTown(townName);
+		t = IOManager.getTown(townName);
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class TownAdminSettings extends AbstractCommand {
 					p.sendMessage(Chatter.TagMessage("FreeBuild set to: " + t.isFreeBuildAllowed().toString()));
 				}
 			}
-			Main.fileManager.UpdateTown(t);
+			IOManager.UpdateTown(t);
 		}
 	}
 }

@@ -3,6 +3,7 @@ package me.sirsavary.townmanager.listeners;
 import java.util.ArrayList;
 
 import me.sirsavary.townmanager.Chatter;
+import me.sirsavary.townmanager.IOManager;
 import me.sirsavary.townmanager.Main;
 import me.sirsavary.townmanager.objects.Plot;
 
@@ -37,15 +38,15 @@ public class WandListener implements Listener {
 			}
 			else if (p.hasPermission(Main.name + ".Inspect") && (p.getItemInHand().getType() == Material.BOOK)) { //If player is using inspection tool and has permission to use it
 				Chunk c = l.getChunk(); //Get the current chunk
-				if (Main.fileManager.isChunkOccupied(c)) { //If the chunk is occupied
+				if (IOManager.isChunkOccupied(c)) { //If the chunk is occupied
 					String ID;
 
-					if (Main.fileManager.isChunkOccupiedByTown(c)) {
-						ID = Main.fileManager.getTownAtChunk(c).getFormattedID(); //Get the town ID
+					if (IOManager.isChunkOccupiedByTown(c)) {
+						ID = IOManager.getTownAtChunk(c).getFormattedID(); //Get the town ID
 						p.sendMessage("Chunk belongs to town " + ID); //Send it to the player
-						if (Main.fileManager.isChunkOccupiedByPlots(c)) { //If the chunk is occupied by plots
+						if (IOManager.isChunkOccupiedByPlots(c)) { //If the chunk is occupied by plots
 							ArrayList<String> messageList = new ArrayList<String>(); //Make a list for storing the plots
-							for (Plot plot : Main.fileManager.getPlotsAtChunk(c))
+							for (Plot plot : IOManager.getPlotsAtChunk(c))
 								if (Main.regionHandler.isLocationWithinRegion(l, plot)) { //If the inspection tool was clicked within a plot
 									Location min = plot.getMinPoint();
 									Location max = plot.getMaxPoint();
@@ -60,8 +61,8 @@ public class WandListener implements Listener {
 						}
 					}
 
-					else if (Main.fileManager.isChunkOccupiedByCountry(c)) { //If the chunk is not occupied by a town, but it is by a country
-						ID = Main.fileManager.getCountryAtChunk(c).getID(); //Get the name of the country
+					else if (IOManager.isChunkOccupiedByCountry(c)) { //If the chunk is not occupied by a town, but it is by a country
+						ID = IOManager.getCountryAtChunk(c).getID(); //Get the name of the country
 						p.sendMessage(Chatter.Message("Chunk belongs to country " + ID )); //Send it to the player
 					}
 				}

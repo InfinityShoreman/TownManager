@@ -1,7 +1,7 @@
 package me.sirsavary.townmanager.listeners;
 
 import me.sirsavary.townmanager.Chatter;
-import me.sirsavary.townmanager.Main;
+import me.sirsavary.townmanager.IOManager;
 import me.sirsavary.townmanager.objects.Town;
 
 import org.bukkit.entity.Entity;
@@ -25,8 +25,8 @@ public class PVPListener implements Listener {
 				Entity damager = damageEvent.getDamager();
 				Entity defender = event.getEntity();
 
-				Town defTown = Main.fileManager.getTownAtChunk(defender.getLocation().getChunk()); //Get the defenders town
-				Town attTown = Main.fileManager.getTownAtChunk(damager.getLocation().getChunk()); //Get the attackers town
+				Town defTown = IOManager.getTownAtChunk(defender.getLocation().getChunk()); //Get the defenders town
+				Town attTown = IOManager.getTownAtChunk(damager.getLocation().getChunk()); //Get the attackers town
 
 				if (defTown != null) { //If there is a town here
 					if (!defTown.isPVPAllowed()) { //PVP is not allowed
@@ -49,7 +49,7 @@ public class PVPListener implements Listener {
 			}
 			else {
 				Entity defender = event.getEntity();
-				Town t = Main.fileManager.getTownAtChunk(defender.getLocation().getChunk()); //Get the town
+				Town t = IOManager.getTownAtChunk(defender.getLocation().getChunk()); //Get the town
 
 				if (t != null) { //If there is a town here
 					if (!t.isPVPAllowed()) { //PVP is not allowed

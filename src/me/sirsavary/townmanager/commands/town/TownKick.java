@@ -1,6 +1,7 @@
 package me.sirsavary.townmanager.commands.town;
 
 import me.sirsavary.townmanager.Chatter;
+import me.sirsavary.townmanager.IOManager;
 import me.sirsavary.townmanager.Main;
 import me.sirsavary.townmanager.objects.Town;
 
@@ -12,7 +13,7 @@ public class TownKick {
 	public TownKick(Player player, String playerToKick) {
 		Player p = player;
 
-		Town t = Main.fileManager.getPlayerTown(p);
+		Town t = IOManager.getPlayerTown(p);
 		if (t == null) {
 			p.sendMessage(Chatter.TagMessage("You are not part of a town!"));
 		}
@@ -24,7 +25,7 @@ public class TownKick {
 				p.sendMessage(Chatter.TagMessage(playerToKick + " is not a part of " + t.getFormattedID() + "!"));
 			}
 			else {
-				Main.fileManager.RemoveCitizen(playerToKick, t);
+				IOManager.RemoveCitizen(playerToKick, t);
 				p.sendMessage(Chatter.TagMessage(playerToKick + " has been kicked from " + t.getFormattedID() + "!"));
 				if (Main.server.getPlayerExact(playerToKick) != null) {
 					Main.server.getPlayerExact(playerToKick).sendMessage("You have been kicked from" + t.getFormattedID() + "!");

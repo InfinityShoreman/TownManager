@@ -3,6 +3,7 @@ package me.sirsavary.townmanager.listeners;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import me.sirsavary.townmanager.IOManager;
 import me.sirsavary.townmanager.Main;
 import me.sirsavary.townmanager.objects.ResourceListType;
 import me.sirsavary.townmanager.objects.TaxType;
@@ -26,7 +27,7 @@ public class ResourceTaxListener {
 	@EventHandler
 	public void onPlayerCollectBlock(BlockBreakEvent e) {
 		Player p = e.getPlayer();
-		Town playerTown = Main.fileManager.getPlayerTown(p); //Get the player's town
+		Town playerTown = IOManager.getPlayerTown(p); //Get the player's town
 		if (playerTown == null) return; //If player does not have a town, return
 		if (playerTown.getTaxType() != TaxType.RESOURCE) return; //If the player's town does not collect resource taxes, return
 		
@@ -73,7 +74,7 @@ public class ResourceTaxListener {
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
 		
-		Town playerTown = Main.fileManager.getPlayerTown(p); //Get the player's town
+		Town playerTown = IOManager.getPlayerTown(p); //Get the player's town
 		if (playerTown == null) return; //If player does not have a town, return
 		if (playerTown.getTaxType() != TaxType.RESOURCE) return; //If the player's town does not collect resource taxes, return
 		

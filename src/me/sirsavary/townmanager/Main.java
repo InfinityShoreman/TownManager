@@ -143,7 +143,7 @@ public class Main extends JavaPlugin {
 			pm = server.getPluginManager();
 			// Now that config is loaded set DBType and make a new IOManager
 			dbType = yamlConfig.getString("Database.DBType", "flatfile");
-			fileManager = new IOManager(this, dbType);
+			IOManager.Initialize(dbType);
 			regionHandler = new RegionHandler();
 			questioner = (Questioner) pm.getPlugin("Questioner");
 			// XXX

@@ -1,8 +1,8 @@
 package me.sirsavary.townmanager.commands;
 
 import me.sirsavary.townmanager.Chatter;
+import me.sirsavary.townmanager.IOManager;
 import me.sirsavary.townmanager.LanguageHolder;
-import me.sirsavary.townmanager.Main;
 import me.sirsavary.townmanager.objects.Plot;
 import me.sirsavary.townmanager.objects.Town;
 
@@ -17,7 +17,7 @@ public class PlotCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-		Town t = Main.fileManager.getPlayerTown((Player) sender);
+		Town t = IOManager.getPlayerTown((Player) sender);
 		Player p = (Player) sender;
 
 		if (t == null) { //If player is not part of a town
@@ -27,7 +27,7 @@ public class PlotCommand implements CommandExecutor {
 
 		if (args.length == 0) { //No args, just /plot
 			Location pLoc = p.getLocation();
-			for (@SuppressWarnings("unused") Plot plot : Main.fileManager.getPlotsAtChunk(pLoc.getChunk())) {
+			for (@SuppressWarnings("unused") Plot plot : IOManager.getPlotsAtChunk(pLoc.getChunk())) {
 
 			}
 			return true;

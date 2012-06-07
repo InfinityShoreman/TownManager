@@ -1,6 +1,7 @@
 package me.sirsavary.townmanager.commands;
 
 import me.sirsavary.townmanager.Chatter;
+import me.sirsavary.townmanager.IOManager;
 import me.sirsavary.townmanager.Main;
 import me.sirsavary.townmanager.TownMapRenderer;
 import me.sirsavary.townmanager.commands.town.TownClaim;
@@ -33,7 +34,7 @@ public class TownCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-		Town t = Main.fileManager.getPlayerTown((Player) sender);
+		Town t = IOManager.getPlayerTown((Player) sender);
 		Player p = (Player) sender;
 		if (args.length == 0)
 		{
@@ -247,10 +248,10 @@ public class TownCommand implements CommandExecutor {
 	}
 	private void ListTowns(Player player) {
 		String s = "";
-		if (Main.fileManager.getTowns() == null) {
+		if (IOManager.getTowns() == null) {
 			player.sendMessage(Chatter.TagMessage("There are no available towns!"));
 		} else {
-			for (Town town : Main.fileManager.getTowns())
+			for (Town town : IOManager.getTowns())
 				if (s.equalsIgnoreCase("")) {
 					s = town.getFormattedID();
 				} else {

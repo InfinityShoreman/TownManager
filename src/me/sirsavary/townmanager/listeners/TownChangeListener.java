@@ -1,6 +1,7 @@
 package me.sirsavary.townmanager.listeners;
 
 import me.sirsavary.townmanager.Chatter;
+import me.sirsavary.townmanager.IOManager;
 import me.sirsavary.townmanager.Main;
 import me.sirsavary.townmanager.objects.Town;
 
@@ -20,8 +21,8 @@ public class TownChangeListener implements Listener {
 		Town newTown;
 		Town oldTown;
 
-		if (Main.fileManager.isChunkOccupiedByTown(c)) {
-			newTown = Main.fileManager.getTownAtChunk(c);
+		if (IOManager.isChunkOccupiedByTown(c)) {
+			newTown = IOManager.getTownAtChunk(c);
 		} else {
 			newTown = null;
 		}
