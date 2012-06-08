@@ -8,7 +8,9 @@ public class Debug {
 	static File debugLogFile = new File(Main.pluginFolder, "Debug.log");
 	static FileWriter writer;
 	static Boolean b = Main.debugEnabled;
-
+	static String eol = System.getProperty("line.separator");
+	
+	
 	public static void SetupDebug() {
 		try {
 			writer = new FileWriter(debugLogFile);
@@ -22,7 +24,7 @@ public class Debug {
 		if (b) {
 			try {
 				writer.write(string);
-				writer.write(0);
+				writer.write(eol);
 				writer.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -33,7 +35,7 @@ public class Debug {
 		if (b) {
 			try {
 				writer.write("[Warning]" + string);
-				writer.write(0);
+				writer.write(eol);
 				writer.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -44,7 +46,7 @@ public class Debug {
 		if (b) {
 			try {
 				writer.write("[Severe]" + string);
-				writer.write(0);
+				writer.write(eol);
 				writer.flush();
 			} catch (IOException e) {
 				e.printStackTrace();

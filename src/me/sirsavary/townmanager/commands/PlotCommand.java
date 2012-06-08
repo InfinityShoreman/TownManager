@@ -21,7 +21,7 @@ public class PlotCommand implements CommandExecutor {
 		Player p = (Player) sender;
 
 		if (t == null) { //If player is not part of a town
-			p.sendMessage(Chatter.TagMessage(LanguageConstants.NotPartOfTown()));
+			p.sendMessage(Chatter.TagMessage(LanguageConstants.NotPartOfTown));
 			return true;
 		}
 
@@ -35,7 +35,7 @@ public class PlotCommand implements CommandExecutor {
 		else if (args.length == 1)
 			return true;
 		else { //Too many args, invalid command
-			p.sendMessage(Chatter.TagMessage(LanguageConstants.InvalidCommand()));
+			p.sendMessage(Chatter.TagMessage(LanguageConstants.InvalidCommand));
 			return true;
 		}
 	}

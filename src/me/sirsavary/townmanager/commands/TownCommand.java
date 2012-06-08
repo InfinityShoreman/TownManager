@@ -10,10 +10,12 @@ import me.sirsavary.townmanager.commands.town.TownInvite;
 import me.sirsavary.townmanager.commands.town.TownJoin;
 import me.sirsavary.townmanager.commands.town.TownLeave;
 import me.sirsavary.townmanager.commands.town.TownRemove;
+import me.sirsavary.townmanager.commands.town.TownSettings;
 //import me.sirsavary.townmanager.commands.town.TownSettings;
 import me.sirsavary.townmanager.commands.town.TownTeleport;
 import me.sirsavary.townmanager.commands.town.TownUnclaim;
 import me.sirsavary.townmanager.commands.town.admin.TownAdminRemove;
+import me.sirsavary.townmanager.commands.town.admin.TownAdminSettings;
 //import me.sirsavary.townmanager.commands.town.admin.TownAdminSettings;
 import me.sirsavary.townmanager.objects.Town;
 
@@ -165,13 +167,13 @@ public class TownCommand implements CommandExecutor {
 					player.sendMessage(Chatter.TagMessage("Not enough args! Must specify player to kick!"));
 				} else if (args[1].equalsIgnoreCase("plot")) {
 					PlotHelp(player);
-				} /*else if (args[1].equalsIgnoreCase("settings")) {
+				} else if (args[1].equalsIgnoreCase("settings")) {
 					try {
 						new TownSettings(player, true, plugin);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} */else if (args[1].equalsIgnoreCase("remove")) {
+				} else if (args[1].equalsIgnoreCase("remove")) {
 					try {
 						new TownRemove(player, true, plugin);
 					} catch (Exception e) {
@@ -214,7 +216,7 @@ public class TownCommand implements CommandExecutor {
 					e.printStackTrace();
 				}
 			}
-			/*else if (args[1].equalsIgnoreCase("settings")) {
+			else if (args[1].equalsIgnoreCase("settings")) {
 				String townName = null;
 				for (int x = 2; x < args.length; x++) {
 					townName = townName + args[x] + " ";
@@ -225,7 +227,7 @@ public class TownCommand implements CommandExecutor {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}*/
+			}
 	}
 	private void PlotHelp(Player p) {
 		p.sendMessage(Chatter.Message("/town plot new [ID]- Makes a new plot"));

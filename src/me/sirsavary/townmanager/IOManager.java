@@ -250,7 +250,7 @@ public class IOManager {
 	public static Town getTown(String townName) {
 		return liveTownList.get(townName);
 	}
-	public void SaveTown(Town town) {
+	public static void SaveTown(Town town) {
 		String name = town.getID(); //The name of the town
 		String mayor = town.getMayor(); //The name of the town's mayor
 		String townHallPlot = town.getTownHallPlot().getID(); //The name of the town's Town Hall plot

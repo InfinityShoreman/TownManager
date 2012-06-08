@@ -146,13 +146,9 @@ public class Main extends JavaPlugin {
 			IOManager.Initialize(dbType);
 			regionHandler = new RegionHandler();
 			questioner = (Questioner) pm.getPlugin("Questioner");
-			// XXX
-			// questioner.setDefaultMessageColor(messageColor);
+			questioner.setDefaultMessageColor(messageColor);
 
 			Debug.SetupDebug();
-			Debug.info("TEST 1");
-			Debug.info("TEST 2");
-			Debug.info("TEST 3");
 			// Parse skills and register events
 			ParseConfigs();
 			RegisterEvents();

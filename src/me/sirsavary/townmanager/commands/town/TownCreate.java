@@ -63,11 +63,12 @@ public class TownCreate extends AbstractCommand
 							Debug.warning(player.getName() + " took to long to choose town name, operation cancelled");
 						}
 						else {
-							Debug.info("");
+							Debug.info(player.getName() + " is creating new town " + townName);
 							Plot region = new Plot("townhall", sel.getMinPoint(), sel.getMaxPoint(), townName, PlotType.GOVERNMENT, player.getName());
 
 							Town newTown = new Town(townName, region, player.getName());
-							Main.fileManager.SaveTown(newTown);
+							if (newTown == null) Debug.severe(townName + " is equal to null! Failure to save iminent!");
+							IOManager.SaveTown(newTown);
 							IOManager.AddCitizen(player.getName(), newTown);
 							IOManager.SavePlot(region);
 							IOManager.TrackPlotChunks(region);

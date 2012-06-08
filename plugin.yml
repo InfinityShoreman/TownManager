@@ -1,0 +1,15 @@
+name: TownManager
+version: 0.6
+author: SirSavary
+main: me.sirsavary.townmanager.Main
+description: Ask questions for LogBlock.
+commands:
+  town:
+    description: Top level town command.
+    permission: TownManager.Town
+    usage:
+      /<command>
+permissions:
+  TownManager.*:
+    description: Gives access to all TownManager commands
+    default: true
