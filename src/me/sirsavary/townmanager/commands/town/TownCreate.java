@@ -46,6 +46,14 @@ public class TownCreate extends AbstractCommand
 				if (Main.questioner.ask(player, "When both corners are selected type anything to continue") != null) {
 
 					Selection sel = Main.regionHandler.getSelection(player);
+					
+					if (sel == null) {
+						player.sendMessage("");
+						player.sendMessage(Chatter.Message("You did not select your town hall!"));
+						player.sendMessage(Chatter.Message("Please try again."));
+						//Add Repeat Code
+					}
+					
 					boolean townHallTooBig = false;
 					if(sel.getSurfaceBlocks().size()>1024){
 						townHallTooBig = true;
@@ -53,8 +61,15 @@ public class TownCreate extends AbstractCommand
 						player.sendMessage(Chatter.Message("Please select a smaller area."));
 						player.sendMessage(Chatter.Message("You can claim more land later."));
 					}
+					
 					while(townHallTooBig = true){
 						if (Main.questioner.ask(player, "When both corners are selected type anything to continue") != null) {
+							Debug.info("Town Hall Max Point" + sel.getMaxPoint().toString());
+							Debug.info("Town Hall Min Point" + sel.getMinPoint().toString());
+							//remove below
+							player.sendMessage(Chatter.Message("Town Hall Max Point" + sel.getMaxPoint().toString()));
+							player.sendMessage(Chatter.Message("Town Hall Min Point" + sel.getMinPoint().toString()));
+							//remove above							
 							sel = Main.regionHandler.getSelection(player);
 							if(sel.getSurfaceBlocks().size()>1024){
 								townHallTooBig = true;
@@ -65,42 +80,32 @@ public class TownCreate extends AbstractCommand
 							else{townHallTooBig=false;}
 						}
 					}
-
-					if (sel == null) {
-						player.sendMessage("");
-						player.sendMessage(Chatter.Message("You did not select your town hall!"));
-						player.sendMessage(Chatter.Message("Now we have to do this all over again!"));
-						player.sendMessage(Chatter.Message("Type /town create when you'd like to try again."));
-					}
 					
+					player.sendMessage("");
+					player.sendMessage(Chatter.Message("Your town is almost complete!"));
+					player.sendMessage(Chatter.Message("The last step is to choose a name for your town!"));
+					String townName = Main.questioner.ask(player, "Please choose a name for your town:");
+					if (townName.equalsIgnoreCase("timed out")) {
+						player.sendMessage(Chatter.TagMessage("You took too long! Operation cancelled!"));
+						Debug.warning(player.getName() + " took to long to choose town name, operation cancelled");
+					}
 					else {
+						Debug.info(player.getName() + " is creating new town " + townName);
+						Plot region = new Plot("townhall", sel.getMinPoint(), sel.getMaxPoint(), townName, PlotType.GOVERNMENT, player.getName());
+
+						Town newTown = new Town(townName, region, player.getName());
+						if (newTown == null) Debug.severe(townName + " is equal to null! Failure to save iminent!");
+						IOManager.SaveTown(newTown);
+						IOManager.AddCitizen(player.getName(), newTown);
+						IOManager.SavePlot(region);
+						IOManager.TrackPlotChunks(region);
+
 						player.sendMessage("");
-						player.sendMessage(Chatter.Message("Your town is almost complete!"));
-						player.sendMessage(Chatter.Message("The last step is to choose a name for your town!"));
-						String townName = Main.questioner.ask(player, "Please choose a name for your town:");
-						if (townName.equalsIgnoreCase("timed out")) {
-							player.sendMessage(Chatter.TagMessage("You took too long! Operation cancelled!"));
-							Debug.warning(player.getName() + " took to long to choose town name, operation cancelled");
-						}
-						else {
-							Debug.info(player.getName() + " is creating new town " + townName);
-							Plot region = new Plot("townhall", sel.getMinPoint(), sel.getMaxPoint(), townName, PlotType.GOVERNMENT, player.getName());
-
-							Town newTown = new Town(townName, region, player.getName());
-							if (newTown == null) Debug.severe(townName + " is equal to null! Failure to save iminent!");
-							IOManager.SaveTown(newTown);
-							IOManager.AddCitizen(player.getName(), newTown);
-							IOManager.SavePlot(region);
-							IOManager.TrackPlotChunks(region);
-
-							player.sendMessage("");
-							player.sendMessage(Chatter.Message("Congratulations!"));
-							player.sendMessage(Chatter.Message("You survived the town creation process!"));
-						}
+						player.sendMessage(Chatter.Message("Congratulations!"));
+						player.sendMessage(Chatter.Message("You survived the town creation process!"));
 					}
 				}
 			}
-
 		}
 	}
 	@Override
