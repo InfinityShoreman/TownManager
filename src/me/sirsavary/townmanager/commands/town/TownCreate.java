@@ -46,13 +46,33 @@ public class TownCreate extends AbstractCommand
 				if (Main.questioner.ask(player, "When both corners are selected type anything to continue") != null) {
 
 					Selection sel = Main.regionHandler.getSelection(player);
+					boolean townHallTooBig = false;
+					if(sel.getSurfaceBlocks().size()>1024){
+						townHallTooBig = true;
+						player.sendMessage(Chatter.Message("Your town hall is too big!"));
+						player.sendMessage(Chatter.Message("Please select a smaller area."));
+						player.sendMessage(Chatter.Message("You can claim more land later."));
+					}
+					while(townHallTooBig = true){
+						if (Main.questioner.ask(player, "When both corners are selected type anything to continue") != null) {
+							sel = Main.regionHandler.getSelection(player);
+							if(sel.getSurfaceBlocks().size()>1024){
+								townHallTooBig = true;
+								player.sendMessage(Chatter.Message("Your town hall is too big!"));
+								player.sendMessage(Chatter.Message("Please select a smaller area."));
+								player.sendMessage(Chatter.Message("You can claim more land later."));
+							}
+							else{townHallTooBig=false;}
+						}
+					}
 
 					if (sel == null) {
 						player.sendMessage("");
 						player.sendMessage(Chatter.Message("You did not select your town hall!"));
 						player.sendMessage(Chatter.Message("Now we have to do this all over again!"));
-						player.sendMessage(Chatter.Message("Type /town create when you'd like to try again"));
+						player.sendMessage(Chatter.Message("Type /town create when you'd like to try again."));
 					}
+					
 					else {
 						player.sendMessage("");
 						player.sendMessage(Chatter.Message("Your town is almost complete!"));
